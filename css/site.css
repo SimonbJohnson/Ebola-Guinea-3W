@@ -21,3 +21,7 @@ th {
     height: 530px;
     width:100%;
 }
+
+select, option { width: 200px; }
+
+select option:disabled { color: #ff8888;}

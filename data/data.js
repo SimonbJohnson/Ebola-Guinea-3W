@@ -16530,7 +16530,7 @@ var data = [
     "to_date":""
   },
   {
-    "region":"Conakry - Aeroport Militaire",
+    "region":"Conakry",
     "region_id":"GIN002001",
     "sector":"Prise en charge",
     "activity_type":"Des laboratoires PCR avec une capacité suffisante d’accueil doivent être mis en place pour que tous les patients puissent être testés et obtenir leurs résultats le même jour.",
@@ -16650,7 +16650,7 @@ var data = [
     "to_date":"1/16/2015"
   },
   {
-    "region":"Conakry - Aeroport Militaire",
+    "region":"Conakry",
     "region_id":"GIN002001",
     "sector":"Prise en charge",
     "activity_type":"Des laboratoires PCR avec une capacité suffisante d’accueil doivent être mis en place pour que tous les patients puissent être testés et obtenir leurs résultats le même jour.",
@@ -16770,7 +16770,7 @@ var data = [
     "to_date":"1/16/2015"
   },
   {
-    "region":"Conakry - Aeroport Militaire",
+    "region":"Conakry",
     "region_id":"GIN002001",
     "sector":"Prise en charge",
     "activity_type":"Des laboratoires PCR avec une capacité suffisante d’accueil doivent être mis en place pour que tous les patients puissent être testés et obtenir leurs résultats le même jour.",
@@ -16900,7 +16900,7 @@ var data = [
     "to_date":"1/16/2015"
   },
   {
-    "region":"Conakry - Aeroport Militaire",
+    "region":"Conakry",
     "region_id":"GIN002001",
     "sector":"Prise en charge",
     "activity_type":"Des laboratoires PCR avec une capacité suffisante d’accueil doivent être mis en place pour que tous les patients puissent être testés et obtenir leurs résultats le même jour.",
@@ -17020,7 +17020,7 @@ var data = [
     "to_date":"1/16/2015"
   },
   {
-    "region":"Conakry - Aeroport Militaire",
+    "region":"Conakry",
     "region_id":"GIN002001",
     "sector":"Prise en charge",
     "activity_type":"Des laboratoires PCR avec une capacité suffisante d’accueil doivent être mis en place pour que tous les patients puissent être testés et obtenir leurs résultats le même jour.",
@@ -17030,7 +17030,7 @@ var data = [
     "to_date":"1/15/2015"
   },
   {
-    "region":"Conakry - Aeroport Militaire",
+    "region":"Conakry",
     "region_id":"GIN002001",
     "sector":"Prise en charge",
     "activity_type":"Des laboratoires PCR avec une capacité suffisante d’accueil doivent être mis en place pour que tous les patients puissent être testés et obtenir leurs résultats le même jour.",
@@ -17040,7 +17040,7 @@ var data = [
     "to_date":"1/15/2015"
   },
   {
-    "region":"Conakry - Aeroport Militaire",
+    "region":"Conakry",
     "region_id":"GIN002001",
     "sector":"Prise en charge",
     "activity_type":"Des laboratoires PCR avec une capacité suffisante d’accueil doivent être mis en place pour que tous les patients puissent être testés et obtenir leurs résultats le même jour.",
@@ -17230,7 +17230,7 @@ var data = [
     "to_date":"1/16/2015"
   },
   {
-    "region":"Conakry - Aeroport Militaire",
+    "region":"Conakry",
     "region_id":"GIN002001",
     "sector":"Prise en charge",
     "activity_type":"Des laboratoires PCR avec une capacité suffisante d’accueil doivent être mis en place pour que tous les patients puissent être testés et obtenir leurs résultats le même jour.",
@@ -17240,7 +17240,7 @@ var data = [
     "to_date":"1/15/2015"
   },
   {
-    "region":"Conakry - Aeroport Militaire",
+    "region":"Conakry",
     "region_id":"GIN002001",
     "sector":"Prise en charge",
     "activity_type":"Des laboratoires PCR avec une capacité suffisante d’accueil doivent être mis en place pour que tous les patients puissent être testés et obtenir leurs résultats le même jour.",
