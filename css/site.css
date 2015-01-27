@@ -18,10 +18,55 @@ th {
 
 #map {
     margin-top:25px;
-    height: 530px;
+    height: 540px;
     width:100%;
 }
 
 select, option { width: 200px; }
 
 select option:disabled { color: #ff8888;}
+
+#reset{
+    margin-top:15px;
+    padding:10px;
+    background-color: green;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius:6px;
+    color: #fff;
+    font-size: 20px;
+    text-decoration: none;
+    cursor: pointer;
+    border:none;
+}
+
+.legendbox{
+    display:inline-block;
+    width:20px;
+    height:20px;
+}
+
+.largelegendbox{
+    display:inline-block;
+    vertical-align:top;
+}
+
+#l1{
+    background-color: #eee;
+}
+
+#l2{
+    background-color: #FFFF8D;
+}
+
+#l3{
+    background-color: #FFFF00;
+}
+
+#l4{
+    background-color: #FFEA00;
+}
+
+#l5{
+    background-color: #FFD600;
+}

@@ -8,7 +8,7 @@ function createDropDown(id,filterid,title,list){
 }
 
 function populateTable(list){
-    var html = "<table><tr><th>Préfecture</th><th>Axes d'interventions</th><th>Organisation</th><th>Activités</th><th>Description</th></tr>";
+    var html = "<table><tr><th>Préfecture</th><th>Axes d'interventions</th><th>Organisation</th><th>Activité</th><th>Description</th></tr>";
     list.forEach(function(e){
         html += "<tr><td>" + e.region + "</td><td>" + e.sector + "</td><td>" + e.org + "</td><td>" + e.activity_type + "</td><td>" + e.x_activity + "</td></tr>";
     });
@@ -17,16 +17,25 @@ function populateTable(list){
 }
 
 function updateMap(list){
-     d3.selectAll("path").attr("opacity",0.1);
-     d3.selectAll("path").attr("fill","#cccccc");
-     list.forEach(function(e){
+    var colors=["#FFFF8D","#FFFF00","#FFEA00","#FFD600"];
+    d3.selectAll("path").attr("opacity",0.1);
+    d3.selectAll("path").attr("fill","#cccccc");
+    list.forEach(function(e){
         if(e.key!="#N/A"&&e.value>0){
             d3.selectAll("#"+e.key).attr("opacity",0.6);
             d3.selectAll("path").attr("fill-opacity",1);
-            d3.selectAll("path").attr("fill","yellow");
             d3.selectAll("path").attr("stroke","green");
+            if(e.value<=2){
+                d3.selectAll("#"+e.key).attr("fill",colors[0]);
+            } else if (e.value<=4) {
+                d3.selectAll("#"+e.key).attr("fill",colors[1]);
+            } else if (e.value<=8) {
+                d3.selectAll("#"+e.key).attr("fill",colors[2]);
+            } else {
+                d3.selectAll("#"+e.key).attr("fill",colors[3]);    
+            }
         };  
-     });
+    });
 }
 
 function setRegionFilter(list){
@@ -141,6 +150,20 @@ $("#orgDD").change(function() {
     populateTable(byOrg.bottom(Infinity));
     updateMap(countByRegion_id.all());
     reduceAllFilters();
+});
+
+$("#reset").on("click",function(){
+    console.log("check");
+    byOrg.filterAll();
+    byRegion.filterAll();
+    byRegion_id.filterAll();
+    bySector.filterAll();
+    $("#orgDD").val("All");
+    $("#regionDD").val("All");
+    $("#domainDD").val("All");
+    populateTable(byOrg.bottom(Infinity));
+    updateMap(countByRegion_id.all());
+    reduceAllFilters();    
 });
 
 var byRegion_id = cf.dimension(function(d){return d.region_id;});
