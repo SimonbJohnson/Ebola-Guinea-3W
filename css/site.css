@@ -4,3 +4,20 @@
   stroke: #000;
   shape-rendering: crispEdges;
 }
+
+td {
+    vertical-align:top;
+    padding:10px;
+    padding-bottom:15px;
+}
+
+th {
+    vertical-align:top;
+    padding:10px;
+}
+
+#map {
+    margin-top:25px;
+    height: 530px;
+    width:100%;
+}
