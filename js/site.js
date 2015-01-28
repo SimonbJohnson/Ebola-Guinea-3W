@@ -58,7 +58,7 @@ function reduceFilter(id,list){
 function reduceAllFilters(){
     reduceFilter("regionDD",countByRegion.all());
     reduceFilter("orgDD",countByOrg.all());
-    reduceFilter("sectorDD",countBySector.all());
+    reduceFilter("domainDD",countBySector.all());
 }
 
 function initMap(){
