@@ -109,7 +109,7 @@ function popUpContent(id){
         var html="Faites passer la souris au-dessus d'une région pour afficher les organisations qui y travaillent.";
     } else {
         var i=0;
-        var html ="Organisations en ";
+        var html ="Organisations à ";
         byRegion_id.filter(id);
         countByRegion2.all().forEach(function(e){
             if(e.value>0){
