@@ -4,7 +4,8 @@ var data = [
     "region_id":"GIN",
     "sector":"Communications",
     "activity_type":"Campagne médiatique",
-    "org":"UNFPA",
+    "org":"1234567890123456789012345678901234567890",
+    "orga":"UNFPA",
     "x_activity":"Partenariat avec la RTG et 3 radios privées (Soleil FM, Nostagie FM et Renaissance FM): émission interactives BCC, en français et en 6 langues nationales ( en partenariat avec les communicateurs traditionnels);",
     "from_date":"31/12/2014",
     "to_date":""
