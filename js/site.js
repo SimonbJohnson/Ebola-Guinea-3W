@@ -58,6 +58,7 @@ function reduceAllFilters(){
     reduceFilter("regionDD",countByRegion.all());
     reduceFilter("orgDD",countByOrg.all());
     reduceFilter("domainDD",countBySector.all());
+    reduceFilter("activityDD",countByActivity.all());
 }
 
 function initMap(){
@@ -108,8 +109,13 @@ function popUpContent(id){
         var html="Faites passer la souris au-dessus d'une région pour afficher les organisations qui y travaillent.";
     } else {
         var i=0;
-        var html ="Organisations: ";
+        var html ="Organisations en ";
         byRegion_id.filter(id);
+        countByRegion2.all().forEach(function(e){
+            if(e.value>0){
+                html+=e.key+": ";
+            } 
+        });
         countByOrg2.all().forEach(function(e){
             if(e.value>0){
                 i++;
@@ -170,6 +176,9 @@ $("#activityDD").change(function() {
 var byRegion = cf.dimension(function(d){return d.region;});
 var countByRegion = byRegion.group();
 
+var byRegion2 = cf.dimension(function(d){return d.region;});
+var countByRegion2 = byRegion.group();
+
 createDropDown("#region_filter","regionDD","Préfecture",countByRegion.all());
 
 $("#regionDD").change(function() {
@@ -210,7 +219,9 @@ $("#reset").on("click",function(){
     byRegion.filterAll();
     byRegion_id.filterAll();
     bySector.filterAll();
+    byActivity.filterAll();
     $("#orgDD").val("All");
+    $("#activityDD").val("All");
     $("#regionDD").val("All");
     $("#domainDD").val("All");
     populateTable(byOrg.bottom(Infinity));
