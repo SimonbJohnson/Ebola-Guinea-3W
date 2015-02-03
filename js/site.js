@@ -34,7 +34,7 @@ function updateMap(list){
             } else {
                 d3.selectAll("#"+e.key).attr("fill",colors[3]);    
             }
-        };  
+        }; 
     });
 }
 
@@ -47,7 +47,6 @@ function setRegionFilter(list){
 function reduceFilter(id,list){
     list.forEach(function(e){
         if(e.value==0){
-            console.log("Disable");
             $('#'+id+' option[value="'+e.key+'"]').attr('disabled','disabled');
         } else {
             $('#'+id+' option[value="'+e.key+'"]').removeAttr('disabled');
@@ -84,6 +83,12 @@ function initMap(){
                 updateMap(countByRegion_id.all());
                 reduceAllFilters();
             });
+            layer.on('mouseover',function(e){
+                popUpContent(e.target.feature.properties.ADM2_CODE);
+            });
+            layer.on('mouseout',function(e){
+                popUpContent("");
+            });               
         }
     }).addTo(map);     
     
@@ -95,7 +100,36 @@ function initMap(){
                 layer2._path.id = layer.feature.properties.ADM2_CODE;
             });
         }
-    });    
+    });
+}
+
+function popUpContent(id){
+    if(id==""){
+        var html="Faites passer la souris au-dessus d'une région pour afficher les organisations qui y travaillent.";
+    } else {
+        var i=0;
+        var html ="Organisations: ";
+        byRegion_id.filter(id);
+        countByOrg2.all().forEach(function(e){
+            if(e.value>0){
+                i++;
+                if(i<7){
+                    html+=e.key+", ";
+                }
+            }
+        });
+        if(i>6){
+            i=i-6;
+            html+="plus " +i+" more";
+        }
+
+        byRegion_id.filterAll();
+        byRegion.filterAll();
+        if($("#regionDD").val()!="All"){
+            byRegion.filter($("#regionDD").val());
+        }
+    }   
+    $("#popup").html(html);
 }
 
 var cf = crossfilter(data);
@@ -112,6 +146,23 @@ $("#domainDD").change(function() {
         bySector.filter($(this).val());
     }
     populateTable(bySector.bottom(Infinity));
+    updateMap(countByRegion_id.all());
+    reduceAllFilters();
+});
+
+var byActivity = cf.dimension(function(d){return d.activity_type.substring(0, 40);});
+var countByActivity = byActivity.group();
+
+createDropDown("#activity_filter","activityDD","Activité",countByActivity.all());
+
+$("#activityDD").change(function() {
+    if($(this).val()=="All"){
+        byActivity.filterAll();
+    } else {
+        byActivity.filterAll();
+        byActivity.filter($(this).val());
+    }
+    populateTable(byActivity.bottom(Infinity));
     updateMap(countByRegion_id.all());
     reduceAllFilters();
 });
@@ -137,6 +188,8 @@ $("#regionDD").change(function() {
 
 var byOrg = cf.dimension(function(d){return d.org;});
 var countByOrg = byOrg.group();
+var byOrg2 = cf.dimension(function(d){return d.org;});
+var countByOrg2 = byOrg2.group();
 
 createDropDown("#org_filter","orgDD","Organisation",countByOrg.all());
 
@@ -153,7 +206,6 @@ $("#orgDD").change(function() {
 });
 
 $("#reset").on("click",function(){
-    console.log("check");
     byOrg.filterAll();
     byRegion.filterAll();
     byRegion_id.filterAll();
