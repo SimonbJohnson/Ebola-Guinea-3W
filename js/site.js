@@ -126,7 +126,7 @@ function popUpContent(id){
         });
         if(i>6){
             i=i-6;
-            html+="plus " +i+" more";
+            html+="et " +i+" autre";
         }
 
         byRegion_id.filterAll();
