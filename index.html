@@ -12,7 +12,9 @@
         <script src="data/data.js" charset="utf-8"></script>
         <script src="data/guinea_pref.js" charset="utf-8"></script>
         <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
-        <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>        
+        <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+        <script src="http://maps.google.com/maps/api/js?v=3.2&sensor=false"></script>
+        <script src="js/google_tile.js"></script>
         <script type="text/javascript">
             var _gaq = _gaq || [];
             _gaq.push(['_setAccount', 'UA-46399763-1']);
@@ -32,7 +34,7 @@
                     <h2>Guinée 3W Dashboard</h2>
                     <h3>Qui, Quoi, Où</h3>
                     <p>Utilisez les menus déroulants ci-dessous pour parcourir et filtrer les données. Les résultats sont présentés sur la carte à droite et dans le tableau qui la suit.</p>
-                    Source: <a href="https://data.hdx.rwlabs.org/dataset/guinea-4w-dataset">HDX</a>
+                    Source: <a href="https://data.hdx.rwlabs.org/dataset/guinea-4w-dataset">La Cellule Nationale de Lutte contre la Maladie a Virus Ebola</a>
                     <h4>Filtres</h4>
                     <div id="sector_filter"></div>
                     <div id="activity_filter"></div>
@@ -41,13 +43,13 @@
                     <button id="reset">Reset</button>
                     <h4>Map Legend</h4>
                     <div class="largelegendbox">
-                        <p><div id="l1" class="legendbox"></div> 0 implémentations</p>
-                        <p><div id="l3" class="legendbox"></div> 3-4 implémentations</p>
-                        <p><div id="l5" class="legendbox"></div> 9+ implémentations</p>
+                        <p><span id="l1" class="legendbox"></span> 0 implémentations</p>
+                        <p><span id="l3" class="legendbox"></span> 3-4 implémentations</p>
+                        <p><span id="l5" class="legendbox"></span> 9+ implémentations</p>
                     </div>
                     <div class="largelegendbox">
-                        <p><div id="l2" class="legendbox"></div> 1-2 implémentations</p> 
-                        <p><div id="l4" class="legendbox"></div> 5-8 implémentations</p>
+                        <p><span id="l2" class="legendbox"></span> 1-2 implémentations</p> 
+                        <p><span id="l4" class="legendbox"></span> 5-8 implémentations</p>
                     </div>
                 </div>
                 <div class="col-md-8">

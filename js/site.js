@@ -24,7 +24,8 @@ function updateMap(list){
         if(e.key!="#N/A"&&e.value>0){
             d3.selectAll("#"+e.key).attr("opacity",0.6);
             d3.selectAll("path").attr("fill-opacity",1);
-            d3.selectAll("path").attr("stroke","green");
+            d3.selectAll("path").attr("stroke","steelblue");
+            d3.selectAll("path").attr("stroke-width",2);
             if(e.value<=2){
                 d3.selectAll("#"+e.key).attr("fill",colors[0]);
             } else if (e.value<=4) {
@@ -62,15 +63,17 @@ function reduceAllFilters(){
 }
 
 function initMap(){
-    var base_hotosm = L.tileLayer(
-        'http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png',{
-        attribution: '&copy; OpenStreetMap contributors, <a href="http://hot.openstreetmap.org/">Humanitarian OpenStreetMap Team</a>'}
-    );
+    //var base_hotosm = L.tileLayer(
+    //    'http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png',{
+    //    attribution: '&copy; OpenStreetMap contributors, <a href="http://hot.openstreetmap.org/">Humanitarian OpenStreetMap Team</a>'}
+    //);
+    
+    var base_google = new L.Google('ROADMAP');
     
     var map = L.map('map', {
         center: [9.9,-11.5],
         zoom: 7,
-        layers: [base_hotosm]
+        layers: [base_google]
     });
     
     var overlay_prefectures = L.geoJson(prefectures,{
@@ -79,7 +82,7 @@ function initMap(){
                 byRegion_id.filterAll();
                 byRegion.filterAll();
                 byRegion_id.filter(e.target.feature.properties.ADM2_CODE);
-                populateTable(byRegion.bottom(Infinity));  
+                populateTable(byActivity.bottom(Infinity));  
                 setRegionFilter(countByRegion.all());
                 updateMap(countByRegion_id.all());
                 reduceAllFilters();
@@ -109,23 +112,23 @@ function popUpContent(id){
         var html="Faites passer la souris au-dessus d'une région pour afficher les organisations qui y travaillent.";
     } else {
         var i=0;
-        var html ="Organisations à ";
+        var html ="<h4>Organisations à ";
         byRegion_id.filter(id);
         countByRegion2.all().forEach(function(e){
             if(e.value>0){
-                html+=e.key+": ";
+                html+=e.key+": </h4>";
             } 
         });
         countByOrg2.all().forEach(function(e){
             if(e.value>0){
                 i++;
-                if(i<7){
+                if(i<16){
                     html+=e.key+", ";
                 }
             }
         });
-        if(i>6){
-            i=i-6;
+        if(i>15){
+            i=i-10;
             html+="et " +i+" autre";
         }
 
@@ -134,7 +137,8 @@ function popUpContent(id){
         if($("#regionDD").val()!="All"){
             byRegion.filter($("#regionDD").val());
         }
-    }   
+    }
+    
     $("#popup").html(html);
 }
 
@@ -151,7 +155,7 @@ $("#domainDD").change(function() {
         bySector.filterAll();
         bySector.filter($(this).val());
     }
-    populateTable(bySector.bottom(Infinity));
+    populateTable(byActivity.bottom(Infinity));
     updateMap(countByRegion_id.all());
     reduceAllFilters();
 });
@@ -168,7 +172,7 @@ $("#activityDD").change(function() {
         byActivity.filterAll();
         byActivity.filter($(this).val());
     }
-    populateTable(byActivity.bottom(Infinity));
+    populateTable(byRegion.bottom(Infinity));
     updateMap(countByRegion_id.all());
     reduceAllFilters();
 });
@@ -190,7 +194,7 @@ $("#regionDD").change(function() {
         byRegion_id.filterAll();
         byRegion.filter($(this).val());
     }
-    populateTable(byRegion.bottom(Infinity));
+    populateTable(byActivity.bottom(Infinity));
     updateMap(countByRegion_id.all());
     reduceAllFilters();
 });
@@ -209,7 +213,7 @@ $("#orgDD").change(function() {
         byOrg.filterAll();
         byOrg.filter($(this).val());
     }
-    populateTable(byOrg.bottom(Infinity));
+    populateTable(byRegion.bottom(Infinity));
     updateMap(countByRegion_id.all());
     reduceAllFilters();
 });
@@ -224,7 +228,7 @@ $("#reset").on("click",function(){
     $("#activityDD").val("All");
     $("#regionDD").val("All");
     $("#domainDD").val("All");
-    populateTable(byOrg.bottom(Infinity));
+    populateTable(byActivity.bottom(Infinity));
     updateMap(countByRegion_id.all());
     reduceAllFilters();    
 });
@@ -233,6 +237,6 @@ var byRegion_id = cf.dimension(function(d){return d.region_id;});
 var byRegion_id2 = cf.dimension(function(d){return d.region_id;});
 var countByRegion_id = byRegion_id2.group();
 
-populateTable(byRegion.bottom(Infinity));
+populateTable(byActivity.bottom(Infinity));
 initMap();
 updateMap(countByRegion_id.all());
