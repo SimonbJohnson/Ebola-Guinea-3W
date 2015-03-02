@@ -10,7 +10,7 @@ function createDropDown(id,filterid,title,list){
 function populateTable(list){
     var html = "<table><tr><th>Préfecture</th><th>Axes d'interventions</th><th>Organisation</th><th>Activité</th><th>Description</th></tr>";
     list.forEach(function(e){
-        html += "<tr><td>" + e.region + "</td><td>" + e.sector + "</td><td>" + e.org + "</td><td>" + e.activity_type + "</td><td>" + e.x_activity + "</td></tr>";
+        html += "<tr><td>" + e.Region + "</td><td>" + e.Sector + "</td><td>" + e.Organisation + "</td><td>" + e.Activity_Type + "</td><td>" + e.Activity_Description + "</td></tr>";
     });
     html +="</table>";
     $("#information_table").html(html);
@@ -56,10 +56,10 @@ function reduceFilter(id,list){
 }
 
 function reduceAllFilters(){
-    reduceFilter("regionDD",countByRegion.all());
-    reduceFilter("orgDD",countByOrg.all());
-    reduceFilter("domainDD",countBySector.all());
-    reduceFilter("activityDD",countByActivity.all());
+    reduceFilter("regionDD",cf.countByRegion.all());
+    reduceFilter("orgDD",cf.countByOrg.all());
+    reduceFilter("domainDD",cf.countBySector.all());
+    reduceFilter("activityDD",cf.countByActivity.all());
 }
 
 function initMap(){
@@ -80,12 +80,12 @@ function initMap(){
         onEachFeature:function(feature, layer) {
             layer.on('click', function (e) {
                 popUpContent(e.target.feature.properties.ADM2_CODE);
-                byRegion_id.filterAll();
-                byRegion.filterAll();
-                byRegion_id.filter(e.target.feature.properties.ADM2_CODE);                
-                populateTable(byActivity.bottom(Infinity));  
-                setRegionFilter(countByRegion.all());
-                updateMap(countByRegion_id.all());
+                cf.byRegion_id.filterAll();
+                cf.byRegion.filterAll();
+                cf.byRegion_id.filter(e.target.feature.properties.ADM2_CODE);                
+                populateTable(cf.byActivity.bottom(Infinity));  
+                setRegionFilter(cf.countByRegion.all());
+                updateMap(cf.countByRegion_id.all());
                 reduceAllFilters();
             });
             layer.on('mouseover',function(e){
@@ -118,13 +118,13 @@ function popUpContent(id){
     } else {
         var i=0;
         var html ="<h4>Organisations à ";
-        byRegion_id.filter(id);
-        countByRegion2.all().forEach(function(e){
+        cf.byRegion_id.filter(id);
+        cf.countByRegion2.all().forEach(function(e){
             if(e.value>0){
                 html+=e.key+": </h4>";
             } 
         });
-        countByOrg2.all().forEach(function(e){
+        cf.countByOrg2.all().forEach(function(e){
             if(e.value>0){
                 i++;
                 if(i<16){
@@ -137,111 +137,128 @@ function popUpContent(id){
             html+="et " +i+" autre";
         }
 
-        byRegion_id.filterAll();
-        byRegion.filterAll();
+        cf.byRegion_id.filterAll();
+        cf.byRegion.filterAll();
         if($("#regionDD").val()!="All"){
-            byRegion.filter($("#regionDD").val());
+            cf.byRegion.filter($("#regionDD").val());
         }
     }
     
     $("#popup").html(html);
 }
 
-var cf = crossfilter(data);
-var bySector = cf.dimension(function(d){return d.sector;});
-var countBySector = bySector.group();
+var sql = 'SELECT * FROM "3ee593d4-d7aa-4c7a-8c2c-5e5fd192bb45"';
 
-createDropDown("#sector_filter","domainDD","Axes d'interventions",countBySector.all());
+var ajaxData = encodeURIComponent(JSON.stringify({sql: sql}));
 
-$("#domainDD").change(function() {
-    if($(this).val()=="All"){
-        bySector.filterAll();
-    } else {
-        bySector.filterAll();
-        bySector.filter($(this).val());
-    }
-    populateTable(byActivity.bottom(Infinity));
-    updateMap(countByRegion_id.all());
-    reduceAllFilters();
+
+var dataCall = $.ajax({
+    type: 'POST',
+    dataType: 'json',
+    url: 'https://data.hdx.rwlabs.org/api/3/action/datastore_search_sql',
+    data: ajaxData,
 });
 
-var byActivity = cf.dimension(function(d){return d.activity_type.substring(0, 40);});
-var countByActivity = byActivity.group();
+var cf;
 
-createDropDown("#activity_filter","activityDD","Activité",countByActivity.all());
+$.when(dataCall).then(function(dataArgs){
 
-$("#activityDD").change(function() {
-    if($(this).val()=="All"){
-        byActivity.filterAll();
-    } else {
-        byActivity.filterAll();
-        byActivity.filter($(this).val());
-    }
-    populateTable(byRegion.bottom(Infinity));
-    updateMap(countByRegion_id.all());
-    reduceAllFilters();
+    cf = crossfilter(dataArgs.result.records);
+    cf.bySector = cf.dimension(function(d){return d.Sector;});
+    cf.countBySector = cf.bySector.group();
+
+    createDropDown("#sector_filter","domainDD","Axes d'interventions",cf.countBySector.all());
+
+    $("#domainDD").change(function() {
+        if($(this).val()=="All"){
+            cf.bySector.filterAll();
+        } else {
+            cf.bySector.filterAll();
+            cf.bySector.filter($(this).val());
+        }
+        populateTable(cf.byActivity.bottom(Infinity));
+        updateMap(cf.countByRegion_id.all());
+        reduceAllFilters();
+    });
+
+    cf.byActivity = cf.dimension(function(d){return d.Activity_Type.substring(0, 40);});
+    cf.countByActivity = cf.byActivity.group();
+
+    createDropDown("#activity_filter","activityDD","Activité",cf.countByActivity.all());
+
+    $("#activityDD").change(function() {
+        if($(this).val()=="All"){
+            cf.byActivity.filterAll();
+        } else {
+            cf.byActivity.filterAll();
+            cf.byActivity.filter($(this).val());
+        }
+        populateTable(cf.byRegion.bottom(Infinity));
+        updateMap(cf.countByRegion_id.all());
+        reduceAllFilters();
+    });
+
+    cf.byRegion = cf.dimension(function(d){return d.Region;});
+    cf.countByRegion = cf.byRegion.group();
+
+    cf.byRegion2 = cf.dimension(function(d){return d.Region;});
+    cf.countByRegion2 = cf.byRegion.group();
+
+    createDropDown("#region_filter","regionDD","Préfecture",cf.countByRegion.all());
+
+    $("#regionDD").change(function() {
+        if($(this).val()=="All"){
+            cf.byRegion.filterAll();
+            cf.byRegion_id.filterAll();
+        } else {
+            cf.byRegion.filterAll();
+            cf.byRegion_id.filterAll();
+            cf.byRegion.filter($(this).val());
+        }
+        populateTable(cf.byActivity.bottom(Infinity));
+        updateMap(cf.countByRegion_id.all());
+        reduceAllFilters();
+    });
+
+    cf.byOrg = cf.dimension(function(d){return d.Organisation;});
+    cf.countByOrg = cf.byOrg.group();
+    cf.byOrg2 = cf.dimension(function(d){return d.Organisation;});
+    cf.countByOrg2 = cf.byOrg2.group();
+
+    createDropDown("#org_filter","orgDD","Organisation",cf.countByOrg.all());
+
+    $("#orgDD").change(function() {
+        if($(this).val()=="All"){
+            cf.byOrg.filterAll();
+        } else {
+            cf.byOrg.filterAll();
+            cf.byOrg.filter($(this).val());
+        }
+        populateTable(cf.byRegion.bottom(Infinity));
+        updateMap(cf.countByRegion_id.all());
+        reduceAllFilters();
+    });
+
+    $("#reset").on("click",function(){
+        cf.byOrg.filterAll();
+        cf.byRegion.filterAll();
+        cf.byRegion_id.filterAll();
+        cf.bySector.filterAll();
+        cf.byActivity.filterAll();
+        $("#orgDD").val("All");
+        $("#activityDD").val("All");
+        $("#regionDD").val("All");
+        $("#domainDD").val("All");
+        populateTable(cf.byActivity.bottom(Infinity));
+        updateMap(cf.countByRegion_id.all());
+        reduceAllFilters();    
+    });
+
+    cf.byRegion_id = cf.dimension(function(d){return d.P_Code;});
+    cf.byRegion_id2 = cf.dimension(function(d){return d.P_Code;});
+    cf.countByRegion_id = cf.byRegion_id2.group();
+
+    populateTable(cf.byActivity.bottom(Infinity));
+    initMap();
+    updateMap(cf.countByRegion_id.all());
 });
-
-var byRegion = cf.dimension(function(d){return d.region;});
-var countByRegion = byRegion.group();
-
-var byRegion2 = cf.dimension(function(d){return d.region;});
-var countByRegion2 = byRegion.group();
-
-createDropDown("#region_filter","regionDD","Préfecture",countByRegion.all());
-
-$("#regionDD").change(function() {
-    if($(this).val()=="All"){
-        byRegion.filterAll();
-        byRegion_id.filterAll();
-    } else {
-        byRegion.filterAll();
-        byRegion_id.filterAll();
-        byRegion.filter($(this).val());
-    }
-    populateTable(byActivity.bottom(Infinity));
-    updateMap(countByRegion_id.all());
-    reduceAllFilters();
-});
-
-var byOrg = cf.dimension(function(d){return d.org;});
-var countByOrg = byOrg.group();
-var byOrg2 = cf.dimension(function(d){return d.org;});
-var countByOrg2 = byOrg2.group();
-
-createDropDown("#org_filter","orgDD","Organisation",countByOrg.all());
-
-$("#orgDD").change(function() {
-    if($(this).val()=="All"){
-        byOrg.filterAll();
-    } else {
-        byOrg.filterAll();
-        byOrg.filter($(this).val());
-    }
-    populateTable(byRegion.bottom(Infinity));
-    updateMap(countByRegion_id.all());
-    reduceAllFilters();
-});
-
-$("#reset").on("click",function(){
-    byOrg.filterAll();
-    byRegion.filterAll();
-    byRegion_id.filterAll();
-    bySector.filterAll();
-    byActivity.filterAll();
-    $("#orgDD").val("All");
-    $("#activityDD").val("All");
-    $("#regionDD").val("All");
-    $("#domainDD").val("All");
-    populateTable(byActivity.bottom(Infinity));
-    updateMap(countByRegion_id.all());
-    reduceAllFilters();    
-});
-
-var byRegion_id = cf.dimension(function(d){return d.region_id;});
-var byRegion_id2 = cf.dimension(function(d){return d.region_id;});
-var countByRegion_id = byRegion_id2.group();
-
-populateTable(byActivity.bottom(Infinity));
-initMap();
-updateMap(countByRegion_id.all());
