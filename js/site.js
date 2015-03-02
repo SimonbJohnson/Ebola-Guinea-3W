@@ -18,8 +18,8 @@ function populateTable(list){
 
 function updateMap(list){
     var colors=["#FFFF8D","#FFFF00","#FFEA00","#FFD600"];
-    d3.selectAll("path").attr("opacity",0.1);
-    d3.selectAll("path").attr("fill","#cccccc");
+    d3.selectAll("path").attr("opacity",0.4);
+    d3.selectAll("path").attr("fill","#eeeeee");
     list.forEach(function(e){
         if(e.key!="#N/A"&&e.value>0){
             d3.selectAll("#"+e.key).attr("opacity",0.6);
@@ -79,19 +79,24 @@ function initMap(){
     var overlay_prefectures = L.geoJson(prefectures,{
         onEachFeature:function(feature, layer) {
             layer.on('click', function (e) {
+                popUpContent(e.target.feature.properties.ADM2_CODE);
                 byRegion_id.filterAll();
                 byRegion.filterAll();
-                byRegion_id.filter(e.target.feature.properties.ADM2_CODE);
+                byRegion_id.filter(e.target.feature.properties.ADM2_CODE);                
                 populateTable(byActivity.bottom(Infinity));  
                 setRegionFilter(countByRegion.all());
                 updateMap(countByRegion_id.all());
                 reduceAllFilters();
             });
             layer.on('mouseover',function(e){
+            if($("#regionDD").val()==="All"){    
                 popUpContent(e.target.feature.properties.ADM2_CODE);
+            }
             });
             layer.on('mouseout',function(e){
+            if($("#regionDD").val()==="All"){
                 popUpContent("");
+            }
             });               
         }
     }).addTo(map);     
